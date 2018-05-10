@@ -1,6 +1,14 @@
 /*
- * Create a list that holds all of your cards
+ * Udacity: Create a list that holds all of your cards
+ $listofCards
+ * Gus: Declare variables here, too.
+ $openCards are the one or two cards currently in play
+ $revealedCards are the cards that have previously been revealed
+ $openShow are the cards on constant display because of matching pairs;
  */
+ let $openCards, $revealedCards, $openShow;
+ const $listofCards = $('#deckofCards');
+
 
 
 /*
@@ -12,17 +20,18 @@
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+  var currentIndex = array.length,
+    temporaryValue, randomIndex;
 
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
 
-    return array;
+  return array;
 }
 
 
@@ -36,3 +45,17 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+//class 'card open show' means the card is unclickable, matching pairs
+//$(this).removeClass('myclass');
+//$(this).addClass('showhidenew');
+
+//$('body').on('click', 'li', function() { //not ideal
+
+
+$('body').on('click', '.card', function() {
+//$('body').on('click', '$listofCards', function() { //não funciona
+
+  $(this).toggleClass('card'); //https://stackoverflow.com/questions/7014385/javascript-jquery-to-change-class-onclick
+  $(this).toggleClass('card match');
+});
