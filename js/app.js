@@ -7,7 +7,9 @@
  $openShow are the cards on constant display because of matching pairs;
  */
  let $openCards, $revealedCards, $openShow;
- const $listofCards = $('#deckofCards');
+ $openCards = ['string0','string1'];
+ const $listofCards = $('#deckofCards');                  //one of these can be an array
+ const $arrayofCards = document.querySelector('.deck');  //likely, this one
 
 
 
@@ -36,14 +38,20 @@ function shuffle(array) {
 
 
 /*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
+ * DONE set up the event listener for a card. If a card is clicked:
+ * DONE - display the card's symbol (put this functionality in another function that you call from this one) DONE
+ * DOING - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
  *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
+ *    + if the cards do match, lock the cards in the open position (put this functionality in another function
+  that you call from this one)
+ *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this
+ functionality in another function that you call from this one)
+ *    + increment the move counter and display it on the page (put this functionality in another function
+ that you call from this one)
+ *    + if all cards have matched, display a message with the final score (put this functionality in
+ another function that you call from this one)
+Gus: Star system will have demerits if turned card has data-revealed = true
+
  */
 
 //class 'card open show' means the card is unclickable, matching pairs
@@ -52,10 +60,32 @@ function shuffle(array) {
 
 //$('body').on('click', 'li', function() { //not ideal
 
-
+/*
 $('body').on('click', '.card', function() {
-//$('body').on('click', '$listofCards', function() { //não funciona
+//$('body').on('click', test, function() { //não funciona
 
   $(this).toggleClass('card'); //https://stackoverflow.com/questions/7014385/javascript-jquery-to-change-class-onclick
   $(this).toggleClass('card match');
 });
+*/
+
+
+//$('body').on('click', '.card', displaySymbol(this));
+$('.card').click(function() {
+  displaySymbol($(this)); //https://stackoverflow.com/questions/7519815/in-jquery-how-to-pass-the-element-that-was-clicked-to-the-method-that-is-called
+});
+
+function displaySymbol($obj) {
+  $obj.attr('data-revealed','true'); //for the star demerits
+  $obj.toggleClass('card'); //https://stackoverflow.com/questions/7014385/javascript-jquery-to-change-class-onclick
+  $obj.toggleClass('card match');
+  insertOpenCards($obj);
+}//end of displaySymbol
+
+/*
+function insertOpenCards($obj) {
+  if ($openCards[0] == 'string0') {
+    $openCards[0] = $obj.children()attr("class");
+  }
+}
+*/

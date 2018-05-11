@@ -18,9 +18,11 @@ For specific, detailed instructions, look at the project instructions in the [Ud
 //1) Start by building a very simple grid of cards.
       Don't worry about styling, just get something clickable on the page.
       Figure out the HTML needed to represent a card. Remember, you have to represent two sides of the card. Are you going to have two separate elements stacked on top of each other?
+
 //2) Add the functionality to handle clicks.
       This should reveal the hidden side of each card.
-      This is done but ought to be improved. Encapsulate functions.
+      Function encapsulated.
+
 3) Work on the matching logic. How does your game "know" if a player guesses correctly or incorrectly?
 4) Work on the winning condition. How does your game “know” if a player has won?
 5) We recommend saving styling until the very end. Allow your game logic and functionality to dictate the styling.
