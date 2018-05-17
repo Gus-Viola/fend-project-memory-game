@@ -8,25 +8,8 @@
  */
  let $arrayofCards, $openCards, $revealedCards, $openShow;
  $arrayofCards = document.querySelectorAll('.card');
- //$openCards = ['string0','string1'];
- $openCards = [];
  $revealedCards = [];
-// const $listofCards = $('#deckofCards');                  //one of these can be an array
-// const $arrayofCards = document.querySelector('.deck');  //likely, this one
-//let $arrayofCards = [];
-
-
-/*
-for (let index = 0; index < 16; index++) {
-  let thisCard = document.querySelector('.card');
-  $arrayofCards[index] = thisCard;
-  $arrayofCards.push(thisCard);
-}
-
-for each card in deck {
-  $arrayofCards.push(thisCard);
-  $arrayofCards.forEach(some function);
-}
+ $openCards = [];
 
 
 /*
@@ -55,8 +38,7 @@ document.body.insertBefore(newDiv, currentDiv);
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-  var currentIndex = array.length,
-    temporaryValue, randomIndex;
+  var currentIndex = array.length,  temporaryValue, randomIndex;
 
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
@@ -85,21 +67,7 @@ function shuffle(array) {
  another function that you call from this one)
 Gus: Star system will have demerits if turned card has data-revealed = true
 
- */
-
-//class 'card open show' means the card is unclickable, matching pairs
-//$(this).removeClass('myclass');
-//$(this).addClass('showhidenew');
-
-//$('body').on('click', 'li', function() { //not ideal
-
-/*
-$('body').on('click', '.card', function() {
-//$('body').on('click', test, function() { //não funciona
-
-  $(this).toggleClass('card'); //https://stackoverflow.com/questions/7014385/javascript-jquery-to-change-class-onclick
-  $(this).toggleClass('card match');
-});
+ *
 */
 
 
@@ -110,11 +78,13 @@ $('.card').click(function() {
 
 function displaySymbol($obj) {
   $obj.attr('data-revealed','true'); //for the star demerits
-  if ($obj.hasClass('card open show')) { //if card is blue, clicking it does nothing
+  if ($obj.hasClass('card open show') || $obj.hasClass('card match')) { //if card is open, clicking it does nothing
     return null;
   }
-  $obj.toggleClass('card'); //https://stackoverflow.com/questions/7014385/javascript-jquery-to-change-class-onclick
-  $obj.toggleClass('card match');
+
+  $obj.removeClass('card').addClass('card open show');
+  //$obj.toggleClass('card'); //https://stackoverflow.com/questions/7014385/javascript-jquery-to-change-class-onclick
+  //$obj.toggleClass('card match');
   insertOpenCards($obj);
 }//end of displaySymbol
 
@@ -125,6 +95,8 @@ function insertOpenCards($obj) {
 
     if ($openCards.length == 2) {
       checkOpenCards();
+    } else {
+      return null;
     }
 /*
   if ($openCards[0] == 'string0') {
@@ -144,13 +116,21 @@ function insertOpenCards($obj) {
 function checkOpenCards($obj) {
   if ($openCards[0].children().attr("class") == $openCards[1].children().attr("class")) {
   //if ($openCards[0] == $openCards[1]) {
-    $($openCards[0]).removeClass('card match').addClass('card open show');
-    $($openCards[1]).removeClass('card match').addClass('card open show');
+  $($openCards[0]).removeClass('card open show').addClass('card match');
+  $($openCards[1]).removeClass('card open show').addClass('card match');
     //alert("Cards are of the same class!");
   } else {
     //CODE HERE: must close cards and add star demerits
-    alert ("Cards are not of the same class.")
+    window.confirm ("Cards are not of the same class.")
+    //$openCards[0].removeClass('card match').addClass('card');
   }
   //$openCards = ['string0','string1']; //reset $openCards
   $openCards = []; //reset $openCards
+
+}
+
+function resetGame() {
+  let newArray = shuffle([...$arrayofCards]); //spread allows for correct array manipulation
+  //newArray.forEach() create HTML element with proper class card each insert in the HTML
+  //document.querySelector('.deck').innerHTML
 }
