@@ -1,22 +1,49 @@
 /*
- * Udacity: Create a list that holds all of your cards
- $arrayofCards: OK
  * Gus: Declare variables here, too.
  $openCards are the one or two cards currently in play  OK
  $revealedCards are the cards that have previously been revealed
  $openShow are the cards on constant display because of matching pairs;
  */
  let $arrayofCards, $openCards, $revealedCards, $openShow;
- $arrayofCards = document.querySelectorAll('.card');
+ $arrayofCards = document.querySelectorAll('.card'); //list that holds all cards
  $revealedCards = [];
  $openCards = [];
 
+ $('.restart').click(function() {
+   displayCards();
+
+   $('.card').click(function() { //event handler needs to be recreated after displayCards run
+     displaySymbol($(this));
+   });
+
+
+ });
+
+ function displayCards() {
+  let tempArray = [];
+  tempArray = shuffle([...$arrayofCards]); //spread allows for correct array manipulation
+  document.querySelector('.deck').innerHTML = "";
+
+  tempArray.forEach(function(arrayElement) {
+    const newListItem = document.createElement("li");
+    const newItem = document.createElement("i");
+
+    $(newListItem).attr('class','card');
+    $(newListItem).attr('data-revealed','false');
+    newItem.className = $(arrayElement).children().attr("class");
+
+    newListItem.appendChild(newItem);
+    document.querySelector('.deck').appendChild(newListItem);
+  });
+    //refresh?
+    return null;
+}
 
 /*
  * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
+ * DONE  - shuffle the list of cards using the provided "shuffle" method below
+ * DONE  - loop through each card and create its HTML
+ * DONE  - add each card's HTML to the page
 
 https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
 
@@ -70,8 +97,7 @@ Gus: Star system will have demerits if turned card has data-revealed = true
  *
 */
 
-
-//$('body').on('click', '.card', displaySymbol(this));
+//$('body').on('click', '.card', displaySymbol($(this)));
 $('.card').click(function() {
   displaySymbol($(this)); //https://stackoverflow.com/questions/7519815/in-jquery-how-to-pass-the-element-that-was-clicked-to-the-method-that-is-called
 });
@@ -86,6 +112,7 @@ function displaySymbol($obj) {
   //$obj.toggleClass('card'); //https://stackoverflow.com/questions/7014385/javascript-jquery-to-change-class-onclick
   //$obj.toggleClass('card match');
   insertOpenCards($obj);
+  return null;
 }//end of displaySymbol
 
 
@@ -129,8 +156,4 @@ function checkOpenCards($obj) {
 
 }
 
-function resetGame() {
-  let newArray = shuffle([...$arrayofCards]); //spread allows for correct array manipulation
-  //newArray.forEach() create HTML element with proper class card each insert in the HTML
-  //document.querySelector('.deck').innerHTML
-}
+//document.body.onload = displayCards();
