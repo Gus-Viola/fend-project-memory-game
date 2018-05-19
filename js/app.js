@@ -4,51 +4,42 @@
  revealedCards are the cards that have previously been revealed
  openShow are the cards on constant display because of matching pairs;
  */
- let arrayofCards, openCards, revealedCards, openShow;
- arrayofCards = document.querySelectorAll('.card'); //list that holds all cards
- revealedCards = [];
- openCards = [];
+let arrayofCards, openCards, revealedCards, openShow, moveCounter;
+arrayofCards = document.querySelectorAll('.card'); //list that holds all cards
+revealedCards = [];
+openCards = [];
+openShow = [];
+moveCounter = 0;
 
- $('.restart').click(function() {
-   displayCards();
+$('.restart').click(function() {
+  displayCards();
+  $('.card').click(onCardClick); //event handler needs to be recreated after displayCards run
+  moveCounter = 0; //reset
+  document.querySelector('.moves').innerHTML = moveCounter.toString();
+  openShow = []; //needs to be reset
+});
 
-  // $('.card').click(function() { //event handler needs to be recreated after displayCards run
-  //   displaySymbol($(this));
-  // });
-
-$('.card').click(onCardClick);
- });
-
- function displayCards() {
+function displayCards() {
   let tempArray = [];
   tempArray = shuffle([...arrayofCards]); //spread allows for correct array manipulation
-  //document.querySelector('.deck').innerHTML = "";
   $('.deck').children().remove();
 
   tempArray.forEach(function(arrayElement) {
     const newListItem = document.createElement("li");
     const newItem = document.createElement("i");
-
-    $(newListItem).attr('class','card');
-    $(newListItem).attr('data-revealed','false');
+    $(newListItem).attr('class', 'card');
+    $(newListItem).attr('data-revealed', 'false');
     newItem.className = $(arrayElement).children().attr("class");
-
     newListItem.appendChild(newItem);
     document.querySelector('.deck').appendChild(newListItem);
-  });
-    return null;
-}
-
-/*
- * Display the cards on the page
- * DONE  - shuffle the list of cards using the provided "shuffle" method below
- * DONE  - loop through each card and create its HTML
- * DONE  - add each card's HTML to the page
- */
+  });//end of forEach loop
+  return null;
+} //end of displayCards()
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-  var currentIndex = array.length,  temporaryValue, randomIndex;
+  var currentIndex = array.length,
+    temporaryValue, randomIndex;
 
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
@@ -59,8 +50,7 @@ function shuffle(array) {
   }
 
   return array;
-}
-
+}// end of shuffle(array)
 
 /*
  * DONE set up the event listener for a card. If a card is clicked:
@@ -69,9 +59,9 @@ function shuffle(array) {
  * DONE - if the list already has another card, check to see if the two cards match
  * DONE DIFFERENTLY   + if the cards do match, lock the cards in the open position (put this functionality in another function
   that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this
+ * DONE DIFFERENTLY   + if the cards do not match, remove the cards from the list and hide the card's symbol (put this
  functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function
+ * DONE   + increment the move counter and display it on the page (put this functionality in another function
  that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in
  another function that you call from this one)
@@ -80,137 +70,102 @@ Gus: Star system will have demerits if turned card has data-revealed = true
  *
 */
 
-//$('body').on('click', '.card', displaySymbol($(this)));
 $('.card').click(onCardClick);
 
+function onCardClick() {
+  $(this).attr('data-revealed', 'true'); //for the star demerits
+  if ($(this).hasClass('open show') || $(this).hasClass('match')) { //if card is open, clicking it does nothing
+    return null;
+  }
 
-
-
-
-  function onCardClick() {
-    $(this).attr('data-revealed','true'); //for the star demerits
-    if ($(this).hasClass('open show') || $(this).hasClass('match')) { //if card is open, clicking it does nothing
-      return null;
-    }
-
-if (openCards.length < 2) {
-
-//  $(this).animateCss('flipInY', function(){
-                $(this).addClass("open show");
-      //      });
-
-            openCards.push($(this));
-
-  //displaySymbol($(this)); //https://stackoverflow.com/questions/7519815/in-jquery-how-to-pass-the-element-that-was-clicked-to-the-method-that-is-called
-
-}
+  if (openCards.length < 2) {
+    $(this).addClass("open show");
+    openCards.push($(this));
+    moveCounter++;
+    document.querySelector('.moves').innerHTML = moveCounter.toString();
+  }
 
   if (openCards.length === 2) {
     checkOpenCards();
     openCards = [];
-  } //else {
-  //  return null;
-  //}
+  }
 
-};
-
-function displaySymbol(obj) {
-//  obj.attr('data-revealed','true'); //for the star demerits
-//  if (obj.hasClass('open show') || obj.hasClass('match')) { //if card is open, clicking it does nothing
-//    return null;
-//  }
-
-  //obj.fadeOut().fadeIn().addClass('open show');
-  //openCards.push(obj);
-
-  //obj.toggleClass('card'); //https://stackoverflow.com/questions/7014385/javascript-jquery-to-change-class-onclick
-  //obj.toggleClass('card open show');
-  //obj.redraw();
-  //insertOpenCards(obj);
+  return null;
+}// end of onCardClick()
 
 
+function checkOpenCards() {
 
-    return null;
-}//end of displaySymbol
-
-
-function checkOpenCards(obj) {
+  //cards match
   if (openCards[0].children().attr("class") === openCards[1].children().attr("class")) {
+    openCards.forEach(function(obj) {
+      obj.animateCss('flip', function() {
+        obj.removeClass("open show").addClass('match');
+      });
+    });//end of forEach loop
 
-    openCards.forEach(function(obj){
-                obj.animateCss('flip', function(){
-                    obj.removeClass("open show").addClass('match');
-                });
-            });
+  let string = openCards[0].children().attr("class");
+  openShow.push(string); //openShow keeps track of winning cards
+  if (openShow.length === 8) {
+    endGame();
+  }
+  } else { // cards do not match
+    openCards.forEach(function(obj) {
+      obj.animateCss('flipInX', function() {
+        obj.removeClass("open show");
+      });
+    }); //end of forEach loop
+  } //end of if-else
 
-      //  $(openCards[0]).removeClass('open show').fadeOut().addClass('match').fadeIn();
-      //  $(openCards[1]).removeClass('open show').addClass('match').fadeIn();
+  return null;
+}//end of checkOpenCards()
 
-  } else { //AQUI ESTÁ O PROBLEMA??????
+//CODE HERE: must close cards and add star demerits
+function endGame() {
+  let tempArray = [];
+  tempArray =  [...arrayofCards];
 
+  tempArray.forEach(function(obj) {
+    //console.log(obj);
+    $(obj).animateCss('wobble');
+  }); //end of forEach loop
 
-    openCards.forEach(function(obj){
-                obj.animateCss('flipInX', function(){
-                    obj.removeClass("open show");
-                });
-            });
-
-//openCards[0].removeClass('open show');
-//openCards[1].removeClass('open show');
-
-}
-}
-
-    //CODE HERE: must close cards and add star demerits
-    //window.confirm ("Cards are not of the same class.")
-    //$(openCards[0]).removeClass('open show').fadeOut().fadeIn();//.addClass('card').fadeIn();
-    //$(openCards[1]).removeClass('open show');
-/*
-    $(openCards[1]).removeClass("open show");
-    openCards[1].animateCss('flipInX', function(){
-                  //$(openCards[1]).removeClass("open show");
-                  $(openCards[1]).removeClass("open show");
-              });
-  $(openCards[0]).animateCss('flipInX', function(){
-                            $(openCards[0]).removeClass("open show");
-                        });
-                        */
-
-    //  openCards[1].fadeOut().fadeIn().addClass('open show');
-  //  openCards[1].removeClass('open show').fadeOut().fadeIn();//.addClass('card').fadeIn();
-
-  //  openCards[1].addClass('card open show').fadeIn().removeClass('card open show').fadeOut().addClass('card').fadeIn();
-
-
-
-  //openCards = []; //reset openCards
   //return null;
+}// end of endGame()
 
-
-function lockMatchingCards(obj) {
-
-
-}
-
-$.fn.redraw = function(){
-  $(this).each(function(){
+//this function will likely die
+$.fn.redraw = function() {
+  $(this).each(function() {
     var redraw = this.offsetHeight;
   });
 };
 
-//document.body.onload = displayCards();
-
-// load animateCss
-// taken from https://github.com/daneden/animate.css/#usage
+// code from https://github.com/daneden/animate.css/#usage
 $.fn.extend({
-    animateCss: function (animationName, callback) {
-        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-        this.addClass('animated ' + animationName).one(animationEnd, function () {
-            $(this).removeClass('animated ' + animationName);
-            if (callback) {
-                callback();
-            }
-        });
-        return this;
-    }
-});
+  animateCss: function(animationName, callback) {
+    var animationEnd = (function(el) {
+      var animations = {
+        animation: 'animationend',
+        OAnimation: 'oAnimationEnd',
+        MozAnimation: 'mozAnimationEnd',
+        WebkitAnimation: 'webkitAnimationEnd',
+      };
+
+      for (var t in animations) {
+        if (el.style[t] !== undefined) {
+          return animations[t];
+        }
+      }
+    })(document.createElement('div'));
+
+    this.addClass('animated ' + animationName).one(animationEnd, function() {
+      $(this).removeClass('animated ' + animationName);
+
+      if (typeof callback === 'function') callback();
+    });
+
+    return this;
+  },
+}); //end of jQuery extention for animation
+
+//document.body.onload = displayCards();
