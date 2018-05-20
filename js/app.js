@@ -3,25 +3,37 @@
  openCards are the one or two cards currently in play  OK
  revealedCards are the cards that have previously been revealed
  openShow are the cards on constant display because of matching pairs;
+ giantArray because 500 icons are better than eight
  */
-let arrayofCards, openCards, revealedCards, openShow, moveCounter;
+let arrayofCards, openCards, revealedCards, openShow, moveCounter, giantArray;
 arrayofCards = document.querySelectorAll('.card'); //list that holds all cards
 revealedCards = [];
 openCards = [];
 openShow = [];
 moveCounter = 0;
+giantArray = document.querySelectorAll('.newCard');
 
 $('.restart').click(function() {
   displayCards();
   $('.card').click(onCardClick); //event handler needs to be recreated after displayCards run
   moveCounter = 0; //reset
   document.querySelector('.moves').innerHTML = moveCounter.toString();
-  openShow = []; //needs to be reset
+  arrayofCards = document.querySelectorAll('.card'); //list that holds all cards
+  revealedCards = [];
+  openCards = [];
+  openShow = [];
+  moveCounter = 0;
+  giantArray = document.querySelectorAll('.newCard');
+
+
 });
 
 function displayCards() {
   let tempArray = [];
-  tempArray = shuffle([...arrayofCards]); //spread allows for correct array manipulation
+  //tempArray = shuffle([...arrayofCards]); //spread allows for correct array manipulation
+  tempArray = shuffle([...giantArray]).slice(0,8);
+  tempArray = tempArray.concat(tempArray);
+  tempArray = shuffle([...tempArray]);
   $('.deck').children().remove();
 
   tempArray.forEach(function(arrayElement) {
@@ -88,6 +100,7 @@ function onCardClick() {
   if (openCards.length === 2) {
     checkOpenCards();
     openCards = [];
+
   }
 
   return null;
@@ -106,30 +119,33 @@ function checkOpenCards() {
 
   let string = openCards[0].children().attr("class");
   openShow.push(string); //openShow keeps track of winning cards
-  if (openShow.length === 8) {
+
+  if (openShow.length == 8) {
     endGame();
   }
+
   } else { // cards do not match
     openCards.forEach(function(obj) {
       obj.animateCss('flipInX', function() {
         obj.removeClass("open show");
       });
-    }); //end of forEach loop
+    }); //end of forEach loop //CODE HERE: must close cards and add star demerits
   } //end of if-else
 
   return null;
 }//end of checkOpenCards()
 
-//CODE HERE: must close cards and add star demerits
+
 function endGame() {
   let tempArray = [];
   tempArray =  [...arrayofCards];
 
-  tempArray.forEach(function(obj) {
+  [...arrayofCards].forEach(function(obj) {
     //console.log(obj);
     $(obj).animateCss('wobble');
   }); //end of forEach loop
 
+  // JSalert();
   //return null;
 }// end of endGame()
 
@@ -167,5 +183,6 @@ $.fn.extend({
     return this;
   },
 }); //end of jQuery extention for animation
+
 
 //document.body.onload = displayCards();
