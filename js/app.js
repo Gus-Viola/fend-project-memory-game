@@ -144,9 +144,9 @@ function endGame() {
     //console.log(obj);
     $(obj).animateCss('wobble');
   }); //end of forEach loop
-
+  displayWinModal();
   // JSalert();
-  //return null;
+  return null;
 }// end of endGame()
 
 //this function will likely die
@@ -155,6 +155,36 @@ $.fn.redraw = function() {
     var redraw = this.offsetHeight;
   });
 };
+
+// https://www.w3schools.com/howto/howto_css_modals.asp
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+// var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+function displayWinModal() {
+  modal.style.display = "block";
+$(modal).animateCss('bounceInUp');
+
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
 
 // code from https://github.com/daneden/animate.css/#usage
 $.fn.extend({
