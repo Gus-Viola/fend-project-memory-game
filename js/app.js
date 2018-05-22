@@ -24,9 +24,29 @@ $('.restart').click(function() {
   openShow = [];
   moveCounter = 0;
   giantArray = document.querySelectorAll('.newCard');
-
-
+  // setInterval(myTimer);
+  Timer();
 });
+
+// <div id="timer">00:00:00</div>
+
+let message = document.getElementById('timer');
+
+// https://gist.github.com/vivekrk/3918717
+function Timer () {
+    var i = 30;
+    var timer = setInterval(function() {
+        message.innerHTML = i + " seconds";
+        i--;
+        if(i == 0) {
+            clearInterval(timer);
+            message.innerHTML = "Time's up!"
+        }
+    }, 1000);
+}
+
+// var timer = new Timer();
+
 
 function displayCards() {
   let tempArray = [];
@@ -184,7 +204,6 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
-
 
 // code from https://github.com/daneden/animate.css/#usage
 $.fn.extend({
