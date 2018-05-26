@@ -5,9 +5,9 @@
  openShow are the cards on constant display because of matching pairs;
  giantArray because 500 icons are better than eight
  */
-let arrayofCards, openCards, revealedCards, openShow, moveCounter, giantArray;
+let arrayofCards, openCards, openShow, moveCounter, giantArray;
 arrayofCards = document.querySelectorAll('.card'); //list that holds all cards
-revealedCards = [];
+
 openCards = [];
 openShow = [];
 moveCounter = 0;
@@ -19,13 +19,13 @@ $('.restart').click(function() {
   moveCounter = 0; //reset
   document.querySelector('.moves').innerHTML = moveCounter.toString();
   arrayofCards = document.querySelectorAll('.card'); //list that holds all cards
-  revealedCards = [];
+
   openCards = [];
   openShow = [];
   moveCounter = 0;
   giantArray = document.querySelectorAll('.newCard');
   // setInterval(myTimer);
-  Timer();
+  timerFunction();
 });
 
 // <div id="timer">00:00:00</div>
@@ -33,12 +33,12 @@ $('.restart').click(function() {
 let message = document.getElementById('timer');
 
 // https://gist.github.com/vivekrk/3918717
-function Timer () {
+function timerFunction () {
     var i = 30;
     var timer = setInterval(function() {
         message.innerHTML = i + " seconds";
         i--;
-        if(i == 0) {
+        if(i === 0) {
             clearInterval(timer);
             message.innerHTML = "Time's up!"
         }
@@ -70,7 +70,7 @@ function displayCards() {
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-  var currentIndex = array.length,
+  let currentIndex = array.length,
     temporaryValue, randomIndex;
 
   while (currentIndex !== 0) {
@@ -157,8 +157,8 @@ function checkOpenCards() {
 
 
 function endGame() {
-  let tempArray = [];
-  tempArray =  [...arrayofCards];
+  //let tempArray = [];
+  //tempArray =  [...arrayofCards];
 
   [...arrayofCards].forEach(function(obj) {
     //console.log(obj);
@@ -170,11 +170,11 @@ function endGame() {
 }// end of endGame()
 
 //this function will likely die
-$.fn.redraw = function() {
-  $(this).each(function() {
-    var redraw = this.offsetHeight;
-  });
-};
+// $.fn.redraw = function() {
+//   $(this).each(function() {
+//     var redraw = this.offsetHeight;
+//   });
+// };
 
 // https://www.w3schools.com/howto/howto_css_modals.asp
 // Get the modal
