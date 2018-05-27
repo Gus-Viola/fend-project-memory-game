@@ -86,6 +86,10 @@ h1 {
  * Styles for the Score Panel
  */
 
+.checked {
+  color: gold;
+}
+
 .score-panel {
     text-align: left;
     width: 345px;

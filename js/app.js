@@ -5,47 +5,93 @@
  openShow are the cards on constant display because of matching pairs;
  giantArray because 500 icons are better than eight
  */
-let arrayofCards, openCards, openShow, moveCounter, giantArray;
-arrayofCards = document.querySelectorAll('.card'); //list that holds all cards
-
+let arrayofCards, openCards, openShow, moveCounter, giantArray, starDemerits;
+arrayofCards = document.querySelectorAll(".card"); //list that holds all cards
 openCards = [];
 openShow = [];
 moveCounter = 0;
-giantArray = document.querySelectorAll('.newCard');
+giantArray = document.querySelectorAll(".newCard");
+scoreStars = document.querySelectorAll(".fa-star");
+starDemerits = 0;
 
-$('.restart').click(function() {
+$(".restart").click(function() {
   displayCards();
-  $('.card').click(onCardClick); //event handler needs to be recreated after displayCards run
+  $(".card").click(onCardClick); //event handler needs to be recreated after displayCards run
   moveCounter = 0; //reset
-  document.querySelector('.moves').innerHTML = moveCounter.toString();
-  arrayofCards = document.querySelectorAll('.card'); //list that holds all cards
+  document.querySelector(".moves").innerHTML = moveCounter.toString();
+  arrayofCards = document.querySelectorAll(".card"); //list that holds all cards
 
   openCards = [];
   openShow = [];
   moveCounter = 0;
-  giantArray = document.querySelectorAll('.newCard');
-  // setInterval(myTimer);
-  timerFunction();
+  giantArray = document.querySelectorAll(".newCard");
+  scoreStars = document.querySelectorAll(".fa-star");
+  //  resetStars();
+  /*scoreStars.forEach(function(obj) {
+    $(obj).animateCss("flip", function() {
+      $(obj).addClass("checked");
+    });
+  });//end of forEach loop*/
+
+  starDemerits = 0;
+  changeStarScore();
+  timerFunction(); //change to first card touched
 });
+
 
 // <div id="timer">00:00:00</div>
 
-let message = document.getElementById('timer');
+let message = document.getElementById("timer");
 
 // https://gist.github.com/vivekrk/3918717
-function timerFunction () {
-    var i = 30;
-    var timer = setInterval(function() {
+function timerFunction () { //timer is broken. clicks restart multiple times wrecks it
+    let i = 45;
+    const timer = setInterval(function() {
         message.innerHTML = i + " seconds";
         i--;
+        if (i === 30 || i === 15) {
+          starDemerits++;
+          changeStarScore();
+        }
+
         if(i === 0) {
             clearInterval(timer);
+            starDemerits++;
+            changeStarScore();
             message.innerHTML = "Time's up!"
         }
     }, 1000);
 }
 
 // var timer = new Timer();
+function changeStarScore(){
+  if (starDemerits === 0) {
+    scoreStars.forEach(function(obj) {
+      $(obj).animateCss("flip", function() {
+        $(obj).addClass("checked");
+      });
+    });//end of forEach loop
+  }//if 0
+/*  if (starDemerits === 1) {
+    obj = scoreStars[3-starDemerits];
+    $(obj).animateCss("flip", function() {
+      $(obj).removeClass("checked");
+    });
+  }//if 1
+  if (starDemerits === 2) {
+    obj = scoreStars[3-starDemerits];
+    $(obj).animateCss("flip", function() {
+      $(obj).removeClass("checked");
+    });
+  }//if 2
+  if (starDemerits === 3) */
+  else {
+    obj = scoreStars[3-starDemerits];
+    $(obj).animateCss("flip", function() {
+      $(obj).removeClass("checked");
+    });
+  }//else
+}
 
 
 function displayCards() {
@@ -54,16 +100,16 @@ function displayCards() {
   tempArray = shuffle([...giantArray]).slice(0,8);
   tempArray = tempArray.concat(tempArray);
   tempArray = shuffle([...tempArray]);
-  $('.deck').children().remove();
+  $(".deck").children().remove();
 
   tempArray.forEach(function(arrayElement) {
     const newListItem = document.createElement("li");
     const newItem = document.createElement("i");
-    $(newListItem).attr('class', 'card');
-    $(newListItem).attr('data-revealed', 'false');
+    $(newListItem).attr("class", "card");
+    $(newListItem).attr("data-revealed", "false");
     newItem.className = $(arrayElement).children().attr("class");
     newListItem.appendChild(newItem);
-    document.querySelector('.deck').appendChild(newListItem);
+    document.querySelector(".deck").appendChild(newListItem);
   });//end of forEach loop
   return null;
 } //end of displayCards()
@@ -102,11 +148,11 @@ Gus: Star system will have demerits if turned card has data-revealed = true
  *
 */
 
-$('.card').click(onCardClick);
+$(".card").click(onCardClick);
 
 function onCardClick() {
-  $(this).attr('data-revealed', 'true'); //for the star demerits
-  if ($(this).hasClass('open show') || $(this).hasClass('match')) { //if card is open, clicking it does nothing
+  $(this).attr("data-revealed", "true"); //for the star demerits
+  if ($(this).hasClass("open show") || $(this).hasClass("match")) { //if card is open, clicking it does nothing
     return null;
   }
 
@@ -114,7 +160,7 @@ function onCardClick() {
     $(this).addClass("open show");
     openCards.push($(this));
     moveCounter++;
-    document.querySelector('.moves').innerHTML = moveCounter.toString();
+    document.querySelector(".moves").innerHTML = moveCounter.toString();
   }
 
   if (openCards.length === 2) {
@@ -132,8 +178,8 @@ function checkOpenCards() {
   //cards match
   if (openCards[0].children().attr("class") === openCards[1].children().attr("class")) {
     openCards.forEach(function(obj) {
-      obj.animateCss('flip', function() {
-        obj.removeClass("open show").addClass('match');
+      obj.animateCss("flip", function() {
+        obj.removeClass("open show").addClass("match");
       });
     });//end of forEach loop
 
@@ -146,7 +192,7 @@ function checkOpenCards() {
 
   } else { // cards do not match
     openCards.forEach(function(obj) {
-      obj.animateCss('flipInX', function() {
+      obj.animateCss("flipInX", function() {
         obj.removeClass("open show");
       });
     }); //end of forEach loop //CODE HERE: must close cards and add star demerits
@@ -162,10 +208,11 @@ function endGame() {
 
   [...arrayofCards].forEach(function(obj) {
     //console.log(obj);
-    $(obj).animateCss('wobble');
+    $(obj).animateCss("wobble");
   }); //end of forEach loop
   displayWinModal();
   // JSalert();
+  //MUST STOP THE TIMER!
   return null;
 }// end of endGame()
 
@@ -178,23 +225,23 @@ function endGame() {
 
 // https://www.w3schools.com/howto/howto_css_modals.asp
 // Get the modal
-var modal = document.getElementById('myModal');
+var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
 // var btn = document.getElementById("myBtn");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+var span = document.getElementsByClassName("close")[0]; //can this die?
 
 // When the user clicks the button, open the modal
 function displayWinModal() {
   modal.style.display = "block";
-$(modal).animateCss('bounceInUp');
+$(modal).animateCss("bounceInUp");
 
 }
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
+span.onclick = function() {  //can this die?
     modal.style.display = "none";
 }
 
@@ -210,10 +257,10 @@ $.fn.extend({
   animateCss: function(animationName, callback) {
     var animationEnd = (function(el) {
       var animations = {
-        animation: 'animationend',
-        OAnimation: 'oAnimationEnd',
-        MozAnimation: 'mozAnimationEnd',
-        WebkitAnimation: 'webkitAnimationEnd',
+        animation: "animationend",
+        OAnimation: "oAnimationEnd",
+        MozAnimation: "mozAnimationEnd",
+        WebkitAnimation: "webkitAnimationEnd",
       };
 
       for (var t in animations) {
@@ -221,12 +268,12 @@ $.fn.extend({
           return animations[t];
         }
       }
-    })(document.createElement('div'));
+    })(document.createElement("div"));
 
-    this.addClass('animated ' + animationName).one(animationEnd, function() {
-      $(this).removeClass('animated ' + animationName);
+    this.addClass("animated " + animationName).one(animationEnd, function() {
+      $(this).removeClass("animated " + animationName);
 
-      if (typeof callback === 'function') callback();
+      if (typeof callback === "function") callback();
     });
 
     return this;
