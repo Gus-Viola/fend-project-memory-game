@@ -2,7 +2,7 @@ html {
     box-sizing: border-box;
 }
 
-/* The universal selector (*) is known to be slow. Can we remove it? */
+/* The universal selector (*) is known to be slow. Can we remove it?*/
 *,
 *::before,
 *::after {

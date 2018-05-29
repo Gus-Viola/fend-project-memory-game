@@ -4,8 +4,19 @@
  revealedCards are the cards that have previously been revealed
  openShow are the cards on constant display because of matching pairs;
  giantArray because 500 icons are better than eight
+
+A README file is included detailing the game and all dependencies.
+Fix broken restart
+restart on onload
+adjust Modal
+adjust giantArray in html5
+Optional:
+Add CSS animations when cards are clicked, unsuccessfully matched, and successfully matched.
+Add unique functionality beyond the minimum requirements (Implement a leaderboard, store game state using local storage, etc.)
+Implement additional optimizations that improve the performance and user experience of the game (keyboard shortcuts for gameplay, etc).
+
  */
-let arrayofCards, openCards, openShow, moveCounter, giantArray, starDemerits;
+let arrayofCards, openCards, openShow, moveCounter, giantArray, starDemerits, timerOn, timer;
 arrayofCards = document.querySelectorAll(".card"); //list that holds all cards
 openCards = [];
 openShow = [];
@@ -13,8 +24,12 @@ moveCounter = 0;
 giantArray = document.querySelectorAll(".newCard");
 scoreStars = document.querySelectorAll(".fa-star");
 starDemerits = 0;
+timerOn = false;
 
 $(".restart").click(function() {
+  // if (timerOn) {
+  //   return null;
+  // }
   displayCards();
   $(".card").click(onCardClick); //event handler needs to be recreated after displayCards run
   moveCounter = 0; //reset
@@ -45,8 +60,12 @@ let message = document.getElementById("timer");
 
 // https://gist.github.com/vivekrk/3918717
 function timerFunction () { //timer is broken. clicks restart multiple times wrecks it
+    if (timerOn) {
+      clearInterval(timer);
+    }
+    timerOn = true;
     let i = 45;
-    const timer = setInterval(function() {
+    timer = setInterval(function() {
         message.innerHTML = i + " seconds";
         i--;
         if (i === 30 || i === 15) {
@@ -59,6 +78,7 @@ function timerFunction () { //timer is broken. clicks restart multiple times wre
             starDemerits++;
             changeStarScore();
             message.innerHTML = "Time's up!"
+            timerOn = false;
         }
     }, 1000);
 }
@@ -183,7 +203,7 @@ function checkOpenCards() {
       });
     });//end of forEach loop
 
-  let string = openCards[0].children().attr("class");
+  const string = openCards[0].children().attr("class"); //let to const
   openShow.push(string); //openShow keeps track of winning cards
 
   if (openShow.length == 8) {
@@ -216,22 +236,20 @@ function endGame() {
   return null;
 }// end of endGame()
 
-//this function will likely die
-// $.fn.redraw = function() {
-//   $(this).each(function() {
-//     var redraw = this.offsetHeight;
-//   });
-// };
+
+
+// When a user wins the game, a modal appears to congratulate the player and ask if they want to play again.
+//  It should also tell the user how much time it took to win the game, and what the star rating was.
 
 // https://www.w3schools.com/howto/howto_css_modals.asp
 // Get the modal
-var modal = document.getElementById("myModal");
+const modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
 // var btn = document.getElementById("myBtn");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0]; //can this die?
+var span = document.getElementsByClassName("close")[0]; 
 
 // When the user clicks the button, open the modal
 function displayWinModal() {
@@ -279,6 +297,14 @@ $.fn.extend({
     return this;
   },
 }); //end of jQuery extention for animation
+
+
+//this function will likely die
+// $.fn.redraw = function() {
+//   $(this).each(function() {
+//     var redraw = this.offsetHeight;
+//   });
+// };
 
 
 //document.body.onload = displayCards();
