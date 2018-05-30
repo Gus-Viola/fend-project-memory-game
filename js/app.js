@@ -5,18 +5,16 @@
  openShow are the cards on constant display because of matching pairs;
  giantArray because 500 icons are better than eight
 
-A README file is included detailing the game and all dependencies.
-Fix broken restart
+brush up README file
 restart on onload
 adjust Modal
-adjust giantArray in html5
 Optional:
 Add CSS animations when cards are clicked, unsuccessfully matched, and successfully matched.
 Add unique functionality beyond the minimum requirements (Implement a leaderboard, store game state using local storage, etc.)
 Implement additional optimizations that improve the performance and user experience of the game (keyboard shortcuts for gameplay, etc).
 
  */
-let arrayofCards, openCards, openShow, moveCounter, giantArray, starDemerits, timerOn, timer;
+let arrayofCards, openCards, openShow, moveCounter, giantArray, starDemerits, timerOn, timer, secondsLeft;
 arrayofCards = document.querySelectorAll(".card"); //list that holds all cards
 openCards = [];
 openShow = [];
@@ -25,6 +23,7 @@ giantArray = document.querySelectorAll(".newCard");
 scoreStars = document.querySelectorAll(".fa-star");
 starDemerits = 0;
 timerOn = false;
+secondsLeft = 45;
 
 $(".restart").click(function() {
   // if (timerOn) {
@@ -64,21 +63,22 @@ function timerFunction () { //timer is broken. clicks restart multiple times wre
       clearInterval(timer);
     }
     timerOn = true;
-    let i = 45;
+    secondsLeft = 45;
     timer = setInterval(function() {
-        message.innerHTML = i + " seconds";
-        i--;
-        if (i === 30 || i === 15) {
+        message.innerHTML = secondsLeft + " seconds";
+        secondsLeft--;
+        if (secondsLeft === 30 || secondsLeft === 15) {
           starDemerits++;
           changeStarScore();
         }
 
-        if(i === 0) {
+        if(secondsLeft === 0) {
             clearInterval(timer);
             starDemerits++;
             changeStarScore();
             message.innerHTML = "Time's up!"
             timerOn = false;
+            displayWinModal("failure"); //any text <> "success" will do
         }
     }, 1000);
 }
@@ -223,16 +223,10 @@ function checkOpenCards() {
 
 
 function endGame() {
-  //let tempArray = [];
-  //tempArray =  [...arrayofCards];
-
   [...arrayofCards].forEach(function(obj) {
-    //console.log(obj);
     $(obj).animateCss("wobble");
   }); //end of forEach loop
-  displayWinModal();
-  // JSalert();
-  //MUST STOP THE TIMER!
+  displayWinModal("success");
   return null;
 }// end of endGame()
 
@@ -244,17 +238,26 @@ function endGame() {
 // https://www.w3schools.com/howto/howto_css_modals.asp
 // Get the modal
 const modal = document.getElementById("myModal");
+const modalContent = document.getElementsByClassName("modal-content");
 
 // Get the button that opens the modal
 // var btn = document.getElementById("myBtn");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0]; 
+const span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal
-function displayWinModal() {
+// Modal shows up when game is won or time is up
+function displayWinModal(string) {
+
   modal.style.display = "block";
-$(modal).animateCss("bounceInUp");
+  if (string == "success") {
+  const displayString = 'You have '+(3 - starDemerits)+' stars and still '+secondsLeft+' seconds left!';
+  $(modalContent).html('<h2>Congratulations, you have won!</h2><ul>'+displayString+'</ul><ul><li><h1><i class="fa fa-trophy"></i></h1></li></ul>');
+  $(modalContent).removeClass("failure").addClass("success"); }
+  else {
+    $(modalContent).html('<h2>Sorry, your time is up!</h2><ul><li><h1><i class="fa fa-bomb"></i></h1></li></ul>');
+    $(modalContent).removeClass("success").addClass("failure"); }
+  $(modal).animateCss("bounceInUp");
 
 }
 
@@ -263,11 +266,9 @@ span.onclick = function() {  //can this die?
     modal.style.display = "none";
 }
 
-// When the user clicks anywhere outside of the modal, close it
+// When the user clicks anywhere on the modal, close it
 window.onclick = function(event) {
-    if (event.target == modal) {
         modal.style.display = "none";
-    }
 }
 
 // code from https://github.com/daneden/animate.css/#usage

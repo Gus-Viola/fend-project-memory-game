@@ -145,9 +145,17 @@ h1 {
     width: 80%; /* Could be more or less, depending on screen size */
 }
 
+.success {
+  background-color: MediumBlue;
+}
+
+.failure {
+  background-color: FireBrick;
+}
+
+
 .modal-content li {
   list-style:none;
-
 }
 
 /* The Close Button */

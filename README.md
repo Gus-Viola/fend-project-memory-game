@@ -3,73 +3,50 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [Contributing](#contributing)
+* [Dependencies](#dependencies)
 
 ## Instructions
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+The computer will mix up the cards for you: there are more than 500 possible
+pairs, but you will only play 8! The cards will be laid in rows, face down.
+You turn over any two cards: if they match, good for you! If they do not,
+fire up those neurons 'cause you'll need them! You will have 45 seconds to
+find all the matching pairs. There are also star points, and you'll never
+get the maximum three - at least I never did. If you do, send me a
+screenshot!
 
-To get started, open `js/app.js` and start building out the app's functionality
+Good luck!
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+The game is over when all the cards have been matched.the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
 
-## Suggested Strategy
+## Dependencies
 
-//1) Start by building a very simple grid of cards.
-      Don't worry about styling, just get something clickable on the page.
-      Figure out the HTML needed to represent a card. Remember, you have to represent two sides of the card. Are you going to have two separate elements stacked on top of each other?
+[Font Awesome](https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css)
+[Google Fonts](https://fonts.googleapis.com/css?family=Coda)
+[Animate.CSS](https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css)
+[JQuery](https://code.jquery.com/jquery-3.2.1.min.js)
 
-//2) Add the functionality to handle clicks.
-      This should reveal the hidden side of each card.
-      Function encapsulated.
-
-3) Work on the matching logic. How does your game "know" if a player guesses correctly or incorrectly?
-4) Work on the winning condition. How does your game “know” if a player has won?
-5) We recommend saving styling until the very end. Allow your game logic and functionality to dictate the styling.
+Dependency is a broad software engineering term used to refer when a piece of software relies on another one. Coupling (computer programming) In software engineering, coupling or dependency is the degree to which each program module relies on each one of the other modules.
+https://askubuntu.com/questions/361741/what-are-dependencies
+Nov 9, 2013
 
 ## Rubric
 
 #Game Behavior
 
-Memory Game Logic
-
-The game randomly shuffles the cards. A user wins once all cards have successfully been matched.
 
 Congratulations Popup
 
 When a user wins the game, a modal appears to congratulate the player and ask if they want to play again. It should also tell the user how much time it took to win the game, and what the star rating was.
 
-Restart Button
-
-A restart button allows the player to reset the game board, the timer, and the star rating.
-
 Star Rating
 
 The game displays a star rating (from 1 to at least 3) that reflects the player's performance. At the beginning of a game, it should display at least 3 stars. After some number of moves, it should change to a lower star rating. After a few more moves, it should change to a even lower star rating (down to 1). The number of moves needed to change the rating is up to you, but it should happen at some point.
 
-Timer
-
-When the player starts a game, a displayed timer should also start. Once the player wins the game, the timer stops.
 
 Move Counter
 
 Game displays the current number of moves a user has made.
-
-#Interface Design
-
-Styling
-
-Application uses CSS to style components for the game.
-
-Usability
-
-All application components are usable across modern desktop, tablet, and phone browsers.
-
-#Documentation
-
-Comments
-
-Comments are present and effectively explain longer code procedure when necessary.
 
 Code Quality
 
