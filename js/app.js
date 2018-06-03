@@ -1,5 +1,6 @@
 let arrayofCards, openCards, openShow, moveCounter, giantArray;
-let starDemerits, timerOn, timer, secondsLeft, firstClick;
+let starDemerits, timerOn, timer, secondsLeft, firstClick, displayString;
+let message = document.getElementById("timer");
 
 arrayofCards = document.querySelectorAll(".card"); //list that holds all cards
 openCards = [];
@@ -11,6 +12,9 @@ starDemerits = 0;
 timerOn = false;
 secondsLeft = 45;
 firstClick = true;
+
+
+
 
 $(".restart").click(function() {
   displayCards();
@@ -29,13 +33,14 @@ $(".restart").click(function() {
   if (timerOn) {
     clearInterval(timer);
   }
+  message.innerHTML = "45 seconds";
   timerOn = false;
   firstClick = true;
 
 });
 
 
-let message = document.getElementById("timer");
+
 
 // https://gist.github.com/vivekrk/3918717
 function timerFunction() {
@@ -58,7 +63,6 @@ function timerFunction() {
       changeStarScore();
       message.innerHTML = "Time's up!"
       timerOn = false;
-      endGame();
       displayFailModal();
     }
   }, 1000);
@@ -157,13 +161,17 @@ function checkOpenCards() {
       });
     }); //end of forEach loop
 
-    const string = openCards[0].children().attr("class"); //let to const
+    const string = openCards[0].children().attr("class");
     openShow.push(string); //openShow keeps track of winning cards
 
-    if (openShow.length === 8) {
-        endGame();
+    if (openShow.length === 2) {
+      // CHECK DISPLAY MODAL BLOCK
+      clearInterval(timer);
+        // alert('You have ' + (3 - starDemerits).toString() + ' stars and still ' + secondsLeft.toString() + ' seconds left!');
         displayWinModal();
-    }
+        endGame();
+
+      }
 
   } else { // cards do not match
     openCards.forEach(function(obj) {
@@ -178,14 +186,37 @@ function checkOpenCards() {
 
 
 function endGame() {
+    // displayWinModal();
   [...arrayofCards].forEach(function(obj) {
     $(obj).animateCss("wobble");
   }); //end of forEach loop
 
-  clearInterval(timer);
+  // [...arrayofCards].forEach(function(obj) {
+  //   // $(obj).animateCss("wobble");
+  //   $(obj).removeClass("animated wobble");
+  // }); //end of forEach loop
+
+
 
   return null;
 } // end of endGame()
+
+
+function wobbleCards() {
+  [...arrayofCards].forEach(function(obj) {
+    // $(obj).animateCss("wobble");
+    $(obj).addClass("animated wobble");
+  }); //end of forEach loop
+
+}
+
+function unwobbleCards() {
+  [...arrayofCards].forEach(function(obj) {
+    // $(obj).animateCss("wobble");
+    $(obj).removeClass("animated wobble");
+  }); //end of forEach loop
+
+}
 
 
 
@@ -204,15 +235,15 @@ const modalContent = document.getElementsByClassName("modal-content");
 
 function displayFailModal() {
   modal.style.display = "block";
-    $(modalContent).html('<h2>Sorry, your time is up!</h2><ul><li><h1><i class="fa fa-bomb"></i></h1></li></ul>');
-    $(modalContent).removeClass("success").addClass("failure");
+  $(modalContent).html('<h2>Sorry, your time is up!</h2><ul><li><h1><i class="fa fa-bomb"></i></h1></li></ul>');
+  $(modalContent).removeClass("success").addClass("failure");
   $(modal).animateCss("bounceInUp");
 }
 
 function displayWinModal() {
   modal.style.display = "block";
-    const displayString = 'You have ' + (3 - starDemerits).toString() + ' stars and still ' + secondsLeft.toString() + ' seconds left!';
-    $(modalContent).html('<h2>Congratulations, you have won!</h2><ul>' + displayString + '</ul><ul><li><h1><i class="fa fa-trophy"></i></h1></li></ul>');
+  displayString = 'You have ' + (3 - starDemerits).toString() + ' stars and still ' + secondsLeft.toString() + ' seconds left!';
+  $(modalContent).html('<h2>Congratulations, you have won!</h2><ul>' + displayString + '</ul><ul><li><h1><i class="fa fa-trophy"></i></h1></li></ul>');
   $(modalContent).removeClass("failure").addClass("success");
   $(modal).animateCss("bounceInUp");
 }
@@ -256,6 +287,8 @@ $.fn.extend({
   },
 }); //end of jQuery extention for animation
 
-
-document.body.onload = displayCards();
-document.body.onload = $(".card").click(onCardClick);
+document.body.onload = $(".restart").click();
+// document.body.onload = displayCards();
+// document.body.onload = $(".card").click(onCardClick);
+// document.body.onload = endGame();
+// document.body.onload = endGame();
