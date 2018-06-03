@@ -17,8 +17,6 @@ screenshot!
 
 Good luck!
 
-The game is over when all the cards have been matched.the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
-
 ## Dependencies
 
 Font Awesome [link](https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css)
