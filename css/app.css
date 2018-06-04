@@ -121,7 +121,9 @@ h1 {
 
 /* The Modal (background) */
 .modal {
-    display: none; /* Hidden by default */
+    /* display: none; */
+    display: block;
+    visibility: hidden;
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
@@ -145,6 +147,11 @@ h1 {
     width: 80%; /* Could be more or less, depending on screen size */
 }
 
+
+.modal-content li {
+  list-style:none;
+}
+
 .success {
   background-color: MediumBlue;
 }
@@ -154,9 +161,13 @@ h1 {
 }
 
 
-.modal-content li {
-  list-style:none;
-}
+.show-modal {
+      /* display: block; */
+       /* opacity: 1; */
+       visibility: visible;
+       /* transform: scale(1.0); */
+       /* transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s; */
+   }
 
 /* The Close Button */
 .close {

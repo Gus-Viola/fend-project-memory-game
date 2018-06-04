@@ -1,6 +1,10 @@
 let arrayofCards, openCards, openShow, moveCounter, giantArray;
 let starDemerits, timerOn, timer, secondsLeft, firstClick, displayString;
 let message = document.getElementById("timer");
+let modal = document.querySelector(".modal");
+let modalContent = document.getElementsByClassName("modal-content");
+let span = document.getElementsByClassName("close")[0];
+
 
 arrayofCards = document.querySelectorAll(".card"); //list that holds all cards
 openCards = [];
@@ -24,6 +28,10 @@ $(".restart").click(function() {
   openShow = [];
   giantArray = document.querySelectorAll(".newCard");
   scoreStars = document.querySelectorAll(".fa-star");
+
+  modal = document.querySelector(".modal");
+  modalContent = document.getElementsByClassName("modal-content");
+
 
   starDemerits = 0;
   changeStarScore();
@@ -158,12 +166,9 @@ function checkOpenCards() {
     const string = openCards[0].children().attr("class");
     openShow.push(string); //openShow keeps track of winning cards
 
-    if (openShow.length == 2) { //it oughta be 8. 2 is just for debugging
+    if (openShow.length === 8) { 
       endGame();
-      displayWinModal(); //when I call displayWinModal here, it does not work!
-      //I cannot figure out why. Can you help me?
-      //if I try the function at the console, it works. But not inside this if statement
-      //I have spent many hours trying to fix it, to no avail. Please help.
+      displayWinModal();
       clearInterval(timer);
     }
 
@@ -180,7 +185,6 @@ function checkOpenCards() {
 
 
 function endGame() {
-  // displayWinModal();
   let tempArray = [];
   tempArray = [...arrayofCards];
 
@@ -188,77 +192,56 @@ function endGame() {
     $(obj).animateCss("wobble");
   }); //end of forEach loop
 
-  // [...arrayofCards].forEach(function(obj) {
-  //   // $(obj).animateCss("wobble");
-  //   $(obj).removeClass("animated wobble");
-  // }); //end of forEach loop
 
   return null;
 } // end of endGame()
 
 
-// function wobbleCards() {
-//   [...arrayofCards].forEach(function(obj) {
-//     // $(obj).animateCss("wobble");
-//     $(obj).addClass("animated wobble");
-//   }); //end of forEach loop
-//
-// }
-
-// function unwobbleCards() {
-//   [...arrayofCards].forEach(function(obj) {
-//     // $(obj).animateCss("wobble");
-//     $(obj).removeClass("animated wobble");
-//   }); //end of forEach loop
-//
-// }
-
-// https://www.w3schools.com/howto/howto_css_modals.asp
-// Get the modal
-const modal = document.getElementById("myModal");
-const modalContent = document.getElementsByClassName("modal-content");
-
-
-// Modal shows up when game is won time is up
+// Modal shows up when time is up
 
 function displayFailModal() {
-  modal.style.display = "block";
+  // modal.style.display = "block";
   // $(modalContent).html('<h2>Sorry, your time is up!</h2><ul><li><h1><i class="fa fa-bomb"></i></h1></li></ul>');
-  $(modalContent).html(`<h2>Sorry, your time is up!</h2>
+  $(modalContent).html(`<span class="close">&times;</span>
+    <h2>Sorry, your time is up!</h2>
     <ul><li>
     <h1><i class="fa fa-bomb"></i></h1>
     </li></ul>`);
   $(modalContent).removeClass("success").addClass("failure");
   $(modal).animateCss("bounceInUp");
+  $(modal).toggleClass("show-modal");
+  span = document.getElementsByClassName("close")[0];
+  span.onclick = function() {
+      toggleModal();}
+}//end of displayFailModal();
+
+// When the user clicks on <span> (x), close the modal
+function toggleModal() {
+        $(modal).toggleClass("show-modal");
+    }
+
+
+span.onclick = function() {
+    toggleModal();
 }
 
-function displayWinModal() {
-  modal.style.display = "block";
-  // displayString = 'You have ' + (3 - starDemerits).toString() + ' stars and still ' + secondsLeft.toString() + ' seconds left!';
-  displayString = `You have ${(3 - starDemerits).toString()} stars
-  and still ${secondsLeft.toString()} seconds left!`;
-  // $(modalContent).html('<h2>Congratulations, you have won!</h2><ul>' + displayString + '</ul><ul><li><h1><i class="fa fa-trophy"></i></h1></li></ul>');
-  $(modalContent).html(`<h2>Congratulations, you have won!</h2>
-    <ul>${displayString}</ul>
-    <ul><li><h1><i class="fa fa-trophy"></i></h1></li></ul>`);
-  $(modalContent).removeClass("failure").addClass("success");
-  $(modal).animateCss("bounceInUp");
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+      toggleModal();
+    }
 }
 
-// When the user clicks anywhere on the modal, close it
-window.onclick = function() {
-  modal.style.display = "none";
-}
 
 // code from https://github.com/daneden/animate.css/#usage
 $.fn.extend({
   animateCss: function(animationName, callback) {
     var animationEnd = (function(el) {
       var animations = {
-        animation: "animationend",
-        OAnimation: "oAnimationEnd",
-        MozAnimation: "mozAnimationEnd",
-        WebkitAnimation: "webkitAnimationEnd",
+        animation: 'animationend',
+        OAnimation: 'oAnimationEnd',
+        MozAnimation: 'mozAnimationEnd',
+        WebkitAnimation: 'webkitAnimationEnd',
       };
 
       for (var t in animations) {
@@ -266,16 +249,36 @@ $.fn.extend({
           return animations[t];
         }
       }
-    })(document.createElement("div"));
+    })(document.createElement('div'));
 
-    this.addClass("animated " + animationName).one(animationEnd, function() {
-      $(this).removeClass("animated " + animationName);
+    this.addClass('animated ' + animationName).one(animationEnd, function() {
+      $(this).removeClass('animated ' + animationName);
 
-      if (typeof callback === "function") callback();
+      if (typeof callback === 'function') callback();
     });
 
     return this;
   },
 }); //end of jQuery extention for animation
+
+function displayWinModal() {
+  displayString = `You have ${(3 - starDemerits).toString()} stars
+  and still ${secondsLeft.toString()} seconds left!`;
+  $(modalContent).html(`<span class="close">&times;</span>
+  <h2>Congratulations, you have won!</h2>
+    <ul>${displayString}</ul>
+    <ul><li><h1><i class="fa fa-trophy"></i></h1></li></ul>`);
+
+  $(modalContent).removeClass("failure").addClass("success");
+  $(modal).animateCss("bounceInUp");
+
+  $(modal).toggleClass("show-modal");
+  span = document.getElementsByClassName("close")[0];
+  span.onclick = function() {
+      toggleModal();
+  }
+
+return null;
+}
 
 document.body.onload = $(".restart").click();
